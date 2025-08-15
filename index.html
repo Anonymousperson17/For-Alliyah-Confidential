@@ -40,17 +40,14 @@ h1 {
 .red { background-color: #f44336; }
 .blue { background-color: #2196f3; }
 
-/* GIF stays same size on all screens */
-.gif_container {
-    margin-top: 20px;
-}
 .gif_container img {
-    width: 200px; /* fixed size */
+    max-width: 100%;
     height: auto;
     border-radius: 10px;
+    margin-top: 20px;
 }
 
-/* 📱 Small screen styles */
+/* 📱 Small screen styles ONLY for mobile */
 @media (max-width: 600px) {
     h1 {
         font-size: 1.5em;
@@ -59,9 +56,13 @@ h1 {
         font-size: 1em;
         padding: 8px 16px;
     }
+    .gif_container img {
+        width: 200px; /* fixed smaller size for mobile */
+        height: auto;
+    }
 }
 </style>
-
+    
         <script>
         // check if device is mobile
         if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
@@ -179,6 +180,7 @@ h1 {
     </script>
 </body>
 </html>
+
 
 
 
