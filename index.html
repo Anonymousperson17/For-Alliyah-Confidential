@@ -52,7 +52,25 @@
             padding: 8px 16px;
         }
     }
+
+    .mobile-view h1 {
+    font-size: 1.5em;
+}
+.mobile-view .button {
+    font-size: 1em;
+    padding: 8px 16px;
+}
+    
 </style>
+
+        <script>
+        // check if device is mobile
+        if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            document.addEventListener("DOMContentLoaded", () => {
+                document.body.classList.add("mobile-view");
+            });
+        }
+    </script>
     
 </head>
 <body>
@@ -159,5 +177,6 @@
     </script>
 </body>
 </html>
+
 
 
