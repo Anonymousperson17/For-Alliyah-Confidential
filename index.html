@@ -104,72 +104,82 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyohhuiukg4vIXKH-UiD
 function logChoice(question, choice) {
     const now = new Date();
     const timeOnly = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     fetch(SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, choice, time: timeOnly })
+        body: JSON.stringify({ question: question, choice: choice, time: timeOnly })
     }).catch(err => console.error("Error logging choice:", err));
 }
 
 function logMessage(message) {
     const now = new Date();
     const timeOnly = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     fetch(SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: "Messege to Seth", choice: message, time: timeOnly })
+        body: JSON.stringify({ question: "Message to Seth", choice: message, time: timeOnly })
     }).catch(err => console.error("Error logging message:", err));
 }
 
 const quiz = [
-    { question: "Hello Alliyah ❤️", answers: [ { text: "Say hello", color: "green" } ] },
-    { question: "Do you know I like you?", answers: [ { text: "Yeahh", color: "green" }, { text: "No?", color: "red" } ] },
-    { question: "Now you know right lol", answers: [ { text: "Yeahh lol", color: "green" }, { text: "Yeah pretty obvious", color: "blue" } ] },
-    { question: "Will I ever have a chance?", answers: [ { text: "Yeah", color: "green" }, { text: "No", color: "red" } ] },
-    { question: "Are you uncomfortable of me admiring you, would you like me to stop?", answers: [ { text: "Not really", color: "green" }, { text: "Yeah stop", color: "red" } ] },
-    { question: "Messege to Seth", isMessage: true }, // moved here
-    { question: "Thank you for answering. Have a nice day!", answers: [ { text: "You too", color: "green" }, { text: "Alright bye", color: "blue" } ] }
+    { question: "Hello Alliyah ❤️", answers: [{ text: "Say hello", color: "green" }] },
+    { question: "Do you know I like you?", answers: [{ text: "Yeahh", color: "green" }, { text: "No?", color: "red" }] },
+    { question: "Now you know right lol", answers: [{ text: "Yeahh lol", color: "green" }, { text: "Yeah pretty obvious", color: "blue" }] },
+    { question: "Will I ever have a chance?", answers: [{ text: "Yeah", color: "green" }, { text: "No", color: "red" }] },
+    { question: "Are you uncomfortable of me admiring you, would you like me to stop?", answers: [{ text: "Not really", color: "green" }, { text: "Yeah stop", color: "red" }] },
+    { question: "Message to Seth", isMessage: true },
+    { question: "Thank you for answering. Have a nice day!", answers: [{ text: "You too", color: "green" }, { text: "Alright bye", color: "blue" }] }
 ];
 
 let currentQuestion = 0;
 
 function showQuestion(index) {
     const q = quiz[index];
-    const qText = document.getElementById("questionText");
+    document.getElementById("questionText").textContent = q.question;
     const btnContainer = document.getElementById("buttonsContainer");
-    qText.textContent = q.question;
     btnContainer.innerHTML = "";
 
     if (q.isMessage) {
         btnContainer.innerHTML = `
-            <textarea id="messageBox" class="msgbox" placeholder="type your message here..."></textarea><br>
-            <button class="button green" id="sendBtn">Send</button>
+            <textarea id="messageBox" placeholder="Type your message here..."></textarea><br>
+            <button class="button green" onclick="sendMessage()">Send Message</button>
         `;
-        document.getElementById("sendBtn").onclick = sendMessage;
         return;
     }
 
     q.answers.forEach(answer => {
         const btn = document.createElement("button");
         btn.textContent = answer.text;
-        btn.className = `button ${answer.color}`;
+        btn.className = \`button \${answer.color}\`;
         btn.onclick = () => {
             logChoice(q.question, answer.text);
-            currentQuestion = Math.min(currentQuestion + 1, quiz.length - 1);
-            showQuestion(currentQuestion);
+            if (index < quiz.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                document.body.innerHTML = `
+                    <div class="container">
+                        <h1 style="color:#d32f2f;">Thanks for answering, Alliyah ❤️</h1>
+                        <div class="gif_container">
+                            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExmmo3c3l5ODh3ZGN6NHhhaDE2Mjg1ZjkwOXczdDFxbWM3dTBtaW9zaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/9XY4f3FgFTT4QlaYqa/giphy.gif" alt="Ending GIF">
+                        </div>
+                    </div>
+                `;
+            }
         };
         btnContainer.appendChild(btn);
     });
 }
 
 function sendMessage() {
-    const message = (document.getElementById("messageBox").value || "").trim();
-    if (!message) { alert("please type a message first"); return; }
-
+    const message = document.getElementById("messageBox").value.trim();
+    if (!message) { alert("Please type a message first."); return; }
     logMessage(message);
-    currentQuestion = Math.min(currentQuestion + 1, quiz.length - 1);
+    currentQuestion++;
     showQuestion(currentQuestion);
 }
 
@@ -178,6 +188,7 @@ showQuestion(currentQuestion);
     
 </body>
 </html>
+
 
 
 
