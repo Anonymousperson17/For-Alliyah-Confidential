@@ -161,13 +161,8 @@ const quiz = [
         ]
     },
     {
-        question: "Thank you for answering. Have a nice day!",
-        answers: [
-            { text: "You too", color: "green" },
-            { text: "Alright bye", color: "blue" }
-        ]
-    },
-    {
+
+            {
         question: "Message to Seth",
         isMessage: true
     }
@@ -217,12 +212,20 @@ function sendMessage() {
         alert("Please type a message first.");
     }
 }
+    
+        question: "Thank you for answering. Have a nice day!",
+        answers: [
+            { text: "You too", color: "green" },
+            { text: "Alright bye", color: "blue" }
+        ]
+    },
 
 showQuestion(currentQuestion);
 </script>
     
 </body>
 </html>
+
 
 
 
