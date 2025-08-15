@@ -110,7 +110,7 @@ function logChoice(question, choice) {
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: question, choice: choice, time: timeOnly })
-    }).catch(err => console.error("Error logging choice:", err));
+    });
 }
 
 function logMessage(message) {
@@ -122,7 +122,7 @@ function logMessage(message) {
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: "Message to Seth", choice: message, time: timeOnly })
-    }).catch(err => console.error("Error logging message:", err));
+    });
 }
 
 const quiz = [
@@ -148,31 +148,23 @@ function showQuestion(index) {
             <textarea id="messageBox" placeholder="Type your message here..."></textarea><br>
             <button class="button green" onclick="sendMessage()">Send Message</button>
         `;
-        return;
+    } else {
+        q.answers.forEach(answer => {
+            const btn = document.createElement("button");
+            btn.textContent = answer.text;
+            btn.className = `button ${answer.color}`;
+            btn.onclick = () => {
+                logChoice(q.question, answer.text);
+                if (index < quiz.length - 1) {
+                    currentQuestion++;
+                    showQuestion(currentQuestion);
+                } else {
+                    showFinalPage();
+                }
+            };
+            btnContainer.appendChild(btn);
+        });
     }
-
-    q.answers.forEach(answer => {
-        const btn = document.createElement("button");
-        btn.textContent = answer.text;
-        btn.className = \`button \${answer.color}\`;
-        btn.onclick = () => {
-            logChoice(q.question, answer.text);
-            if (index < quiz.length - 1) {
-                currentQuestion++;
-                showQuestion(currentQuestion);
-            } else {
-                document.body.innerHTML = `
-                    <div class="container">
-                        <h1 style="color:#d32f2f;">Thanks for answering, Alliyah ❤️</h1>
-                        <div class="gif_container">
-                            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExmmo3c3l5ODh3ZGN6NHhhaDE2Mjg1ZjkwOXczdDFxbWM3dTBtaW9zaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/9XY4f3FgFTT4QlaYqa/giphy.gif" alt="Ending GIF">
-                        </div>
-                    </div>
-                `;
-            }
-        };
-        btnContainer.appendChild(btn);
-    });
 }
 
 function sendMessage() {
@@ -183,11 +175,23 @@ function sendMessage() {
     showQuestion(currentQuestion);
 }
 
+function showFinalPage() {
+    document.body.innerHTML = `
+        <div class="container">
+            <h1 style="color:#d32f2f;">Thanks for answering, Alliyah ❤️</h1>
+            <div class="gif_container">
+                <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExmmo3c3l5ODh3ZGN6NHhhaDE2Mjg1ZjkwOXczdDFxbWM3dTBtaW9zaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/9XY4f3FgFTT4QlaYqa/giphy.gif" alt="Ending GIF">
+            </div>
+        </div>
+    `;
+}
+
 showQuestion(currentQuestion);
 </script>
     
 </body>
 </html>
+
 
 
 
