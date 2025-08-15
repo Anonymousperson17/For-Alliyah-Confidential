@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confidential</title>
+    <title>Quiz for Alliyah ❤️</title>
     <style>
         body {
             display: flex;
@@ -53,7 +53,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyohhuiukg4vIXKH-UiDu0JXCdvGxg0x9YVFiN_sOJJEZTJxpCODIGhGVqdU2J_YSxHsw/exec"; // Replace with your Apps Script Web App URL
+        const SCRIPT_URL = "YOUR_WEB_APP_URL_HERE"; // Replace with your Apps Script Web App URL
 
         function logChoice(question, choice) {
             const now = new Date();
@@ -85,28 +85,28 @@
                 question: "Now you know right lol",
                 answers: [
                     { text: "Yeahh lol", color: "green" },
-                    { text: "Yeah pretty obvious", color: "blue" }
+                    { text: "Yeah pretty obvious", color: "red" }
                 ]
             },
             {
                 question: "Will I ever have a chance?",
                 answers: [
                     { text: "Yeah", color: "green" },
-                    { text: "No", color: "red" }
+                    { text: "No", color: "blue" }
                 ]
             },
             {
                 question: "Are you uncomfortable of me admiring you, would you like me to stop?",
                 answers: [
-                    { text: "Not really", color: "green" },
-                    { text: "Yeah stop", color: "red" }
+                    { text: "Yeah stop", color: "green" },
+                    { text: "Not really", color: "red" }
                 ]
             },
             {
                 question: "Thank you for answering. Have a nice day!",
                 answers: [
                     { text: "You too", color: "green" },
-                    { text: "Alright bye", color: "blue" }
+                    { text: "Alright bye", color: "red" }
                 ]
             }
         ];
@@ -146,6 +146,4 @@
         showQuestion(currentQuestion);
     </script>
 </body>
-
 </html>
-
