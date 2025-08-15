@@ -1,59 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confidential</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f9e3e3;
-            font-family: Arial, sans-serif;
-            flex-direction: column;
-            text-align: center;
-        }
-        h1 {
-            font-size: 2em;
-            color: #d32f2f;
-        }
-        .buttons {
-            margin-top: 20px;
-        }
-        .button {
-            font-size: 1.2em;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-            color: white;
-        }
-        .green { background-color: #4caf50; }
-        .red { background-color: #f44336; }
-        .blue { background-color: #2196f3; }
-        .gif_container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1 id="questionText">Hello Alliyah ❤️</h1>
-        <div class="buttons" id="buttonsContainer"></div>
-        <div class="gif_container">
-            <img id="gifImage" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbW5lenZyZHI5OXM2eW95b3pmMG40cWVrMDhtNjVuM3A4dGNxa2g2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/VM1fcpu2bKs1e2Kdbj/giphy.gif" alt="Cute GIF">
-        </div>
-    </div>
-
-    <script>
-     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyohhuiukg4vIXKH-UiDu0JXCdvGxg0x9YVFiN_sOJJEZTJxpCODIGhGVqdU2J_YSxHsw/exec"; // replace with your web app URL
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyohhuiukg4vIXKH-UiDu0JXCdvGxg0x9YVFiN_sOJJEZTJxpCODIGhGVqdU2J_YSxHsw/exec"; // your web app URL
 let answerTimeout;
 
 // Send question/answer
@@ -63,7 +8,7 @@ function logChoice(question, answer) {
     mode: "no-cors",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({question: question, answer: answer})
-  });
+  }).catch(err => console.error("Error logging choice:", err));
 }
 
 // Send status (Finished, Unfinished, Stopped)
@@ -73,7 +18,7 @@ function logStatus(status) {
     mode: "no-cors",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({status: status})
-  });
+  }).catch(err => console.error("Error logging status:", err));
 }
 
 // Start 15-second timer for unanswered question
@@ -81,17 +26,7 @@ function startAnswerTimer() {
   clearTimeout(answerTimeout);
   answerTimeout = setTimeout(() => {
     logStatus("Unfinished");
-  }, 15000); // 15 seconds
-}
-
-// Call this when user clicks an answer button
-function answerClicked(questionText, answerText, isLastQuestion=false) {
-  clearTimeout(answerTimeout); // stop timer
-  logChoice(questionText, answerText);
-
-  if(isLastQuestion) {
-    logStatus("Finished"); // last question clicked
-  }
+  }, 15000);
 }
 
 // Detect tab close early
@@ -99,96 +34,85 @@ window.addEventListener("beforeunload", function() {
   logStatus("Stopped answering");
 });
 
-        function logChoice(question, choice) {
-            const now = new Date();
-            const timeOnly = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+// Show questions and handle answers
+const quiz = [
+    {
+        question: "Hello Alliyah",
+        answers: [
+            { text: "Say hello", color: "green" }
+        ]
+    },
+    {
+        question: "Do you know I like you?",
+        answers: [
+            { text: "Yeahh", color: "green" },
+            { text: "No?", color: "red" }
+        ]
+    },
+    {
+        question: "Now you know right lol",
+        answers: [
+            { text: "Yeahh lol", color: "green" },
+            { text: "Yeah pretty obvious", color: "blue" }
+        ]
+    },
+    {
+        question: "Will I ever have a chance?",
+        answers: [
+            { text: "Yeah", color: "green" },
+            { text: "No", color: "red" }
+        ]
+    },
+    {
+        question: "Are you uncomfortable of me admiring you, would you like me to stop?",
+        answers: [
+            { text: "Not really", color: "green" },
+            { text: "Yeah stop", color: "red" }
+        ]
+    },
+    {
+        question: "Thank you for answering. Have a nice day!",
+        answers: [
+            { text: "You too", color: "green" },
+            { text: "Alright bye", color: "blue" }
+        ]
+    }
+];
 
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ question: question, choice: choice, time: timeOnly })
-            }).catch(err => console.error("Error logging choice:", err));
-        }
+let currentQuestion = 0;
 
-        const quiz = [
-            {
-                question: "Hello Alliyah",
-                answers: [
-                    { text: "Say hello", color: "green" }
-                ]
-            },
-            {
-                question: "Do you know I like you?",
-                answers: [
-                    { text: "Yeahh", color: "green" },
-                    { text: "No?", color: "red" }
-                ]
-            },
-            {
-                question: "Now you know right lol",
-                answers: [
-                    { text: "Yeahh lol", color: "green" },
-                    { text: "Yeah pretty obvious", color: "blue" }
-                ]
-            },
-            {
-                question: "Will I ever have a chance?",
-                answers: [
-                    { text: "Yeah", color: "green" },
-                    { text: "No", color: "red" }
-                ]
-            },
-            {
-                question: "Are you uncomfortable of me admiring you, would you like me to stop?",
-                answers: [
-                    { text: "Not really", color: "green" },
-                    { text: "Yeah stop", color: "red" }
-                ]
-            },
-            {
-                question: "Thank you for answering. Have a nice day!",
-                answers: [
-                    { text: "You too", color: "green" },
-                    { text: "Alright bye", color: "blue" }
-                ]
+function showQuestion(index) {
+    startAnswerTimer(); // start 15-second timer for this question
+    const q = quiz[index];
+    document.getElementById("questionText").textContent = q.question;
+    const btnContainer = document.getElementById("buttonsContainer");
+    btnContainer.innerHTML = "";
+
+    q.answers.forEach(answer => {
+        const btn = document.createElement("button");
+        btn.textContent = answer.text;
+        btn.className = `button ${answer.color}`;
+        btn.onclick = () => {
+            clearTimeout(answerTimeout);
+            logChoice(q.question, answer.text);
+
+            if(index === quiz.length - 1) {
+                logStatus("Finished"); // last question clicked
+                document.body.innerHTML = `
+                    <div class="container">
+                        <h1 style="color:#d32f2f;">Thanks for answering, Alliyah ❤️</h1>
+                        <div class="gif_container">
+                            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmo3c3l5ODh3ZGN6NHhhaDE2Mjg1ZjkwOXczdDFxbWM3dTBtaW9zaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/9XY4f3FgFTT4QlaYqa/giphy.gif" alt="Ending GIF">
+                        </div>
+                    </div>
+                `;
+            } else {
+                currentQuestion++;
+                showQuestion(currentQuestion);
             }
-        ];
+        };
+        btnContainer.appendChild(btn);
+    });
+}
 
-        let currentQuestion = 0;
-
-        function showQuestion(index) {
-            const q = quiz[index];
-            document.getElementById("questionText").textContent = q.question;
-            const btnContainer = document.getElementById("buttonsContainer");
-            btnContainer.innerHTML = "";
-
-            q.answers.forEach(answer => {
-                const btn = document.createElement("button");
-                btn.textContent = answer.text;
-                btn.className = `button ${answer.color}`;
-                btn.onclick = () => {
-                    logChoice(q.question, answer.text);
-                    if (index < quiz.length - 1) {
-                        currentQuestion++;
-                        showQuestion(currentQuestion);
-                    } else {
-                        document.body.innerHTML = `
-                            <div class="container">
-                                <h1 style="color:#d32f2f;">Thanks for answering, Alliyah ❤️</h1>
-                                <div class="gif_container">
-                                    <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmo3c3l5ODh3ZGN6NHhhaDE2Mjg1ZjkwOXczdDFxbWM3dTBtaW9zaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/9XY4f3FgFTT4QlaYqa/giphy.gif" alt="Ending GIF">
-                                </div>
-                            </div>
-                        `;
-                    }
-                };
-                btnContainer.appendChild(btn);
-            });
-        }
-
-        showQuestion(currentQuestion);
-    </script>
-</body>
-</html>
-
+showQuestion(currentQuestion);
